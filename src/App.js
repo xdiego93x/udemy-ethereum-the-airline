@@ -39,6 +39,7 @@ export class App extends Component {
             const { customer, price, flight } = result.args;
 
             if (customer === this.state.account) {
+                this.load();
                 console.log(`You purchased a flight to ${flight} with a cost of ${price}`);
             } else {
                 this.container.success(`Last customer purchased a flight to ${flight}
@@ -48,7 +49,7 @@ export class App extends Component {
         }.bind(this));
 
 
-        this.web3.currentProvider.publicConfigStore.on('update', async function (event) {
+        this.web3.currentProvider.publicConfigStore && this.web3.currentProvider.publicConfigStore.on('update', async function (event) {
             this.setState({
                 account: event.selectedAddress.toLowerCase()
             }, () => {

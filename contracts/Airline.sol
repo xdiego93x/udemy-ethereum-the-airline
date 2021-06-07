@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.16;
 
 contract Airline {
 
@@ -24,7 +24,7 @@ contract Airline {
   
   event FlightPurchased(address indexed customer, uint price, string flight);
 
-  constructor() {
+  constructor() public {
       owner = msg.sender;   
       flights.push(Flight('Tokio', 4 ether));
       flights.push(Flight('Germany', 3 ether));
@@ -32,7 +32,7 @@ contract Airline {
   }   
 
   function buyFlight(uint flightIndex) public payable {
-      Flight flight = flights[flightIndex];
+      Flight memory flight = flights[flightIndex];
       require(msg.value == flight.price);
 
       Customer storage customer = customers[msg.sender];
@@ -41,7 +41,7 @@ contract Airline {
       customerFlights[msg.sender].push(flight);
       customerTotalFlights[msg.sender] ++;
 
-      FlightPurchased(msg.sender, flight.price, flight.name);
+      emit FlightPurchased(msg.sender, flight.price, flight.name);
   }
 
   function totalFlights() public view returns (uint) {
@@ -60,7 +60,7 @@ contract Airline {
   }
 
   function getAirlineBalance() public isOwner view returns (uint) {
-      address airlineAddress = this;
+      address airlineAddress = address(this);
       return airlineAddress.balance;
   }
 
